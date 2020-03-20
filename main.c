@@ -4,11 +4,15 @@
 #include <time.h>
 #include <stdlib.h>
 
+#include "objekti.h"
 
 static void on_display();
 static void on_reshape(int width, int height);
 static void on_keyboard(unsigned char key, int x, int y);
 
+/*Osvetljenje sam gledala sa casova vezbi, ali sam pravila
+u odnosu na to kako meni odgovaraju boje i razumela postavljanje
+koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/ 
 
 int main(int argc, char **argv){
    
@@ -24,33 +28,14 @@ int main(int argc, char **argv){
     glutDisplayFunc(on_display);
     glutReshapeFunc(on_reshape);
     glutKeyboardFunc(on_keyboard);
+    
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
-    glClearColor(0.5, 0.3, 0.4, 0.2);
+    glClearColor(0, 0, 0, 0);
     glutMainLoop();
 
     return 0;
-}
-
-void draw_axes(float len) {
-    glDisable(GL_LIGHTING);
-
-    glBegin(GL_LINES);
-        glColor3f(0.8,0,0);
-        glVertex3f(0,0,0);
-        glVertex3f(len,0,0);
-
-        glColor3f(0,0.8,0);
-        glVertex3f(0,0,0);
-        glVertex3f(0,len,0);
-
-        glColor3f(0,0,0.8);
-        glVertex3f(0,0,0);
-        glVertex3f(0,0,len);
-    glEnd();
-
-    glEnable(GL_LIGHTING);
 }
 
 void on_keyboard(unsigned char key, int x, int y) {
@@ -71,15 +56,47 @@ void on_reshape(int width, int height) {
 
 
 void on_display() {
+    GLfloat light_position[] = { 0, 1, 1, 0};
+
+    GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1 };
+
+    GLfloat light_diffuse[] = { 0.8,0.8,0.8};
+
+    GLfloat light_specular[] = { 0.3, 0.3, 0.3, 0 };
+
+    GLfloat ambient_coeffs[] = { 0, 0.9, 0.9, 1 };
+
+    GLfloat diffuse_coeffs[] = { 0.0, 0.2, 0.8, 1 };
+
+    GLfloat specular_coeffs[] = { 1, 1, 1, 1 };
+
+    GLfloat shininess = 20;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(1, 2, 6,
-              0, 0, 0,
-              0, 1, 0);
- 
-    draw_axes(50);
+    gluLookAt(6, 3, 6, 0.5, 1, 0.5, 0, 1, 0);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess); 
+
+
+    
+    draw_box();
+    draw_path();
+    draw_ball();
+    
+    
     
     glutSwapBuffers();
 }
