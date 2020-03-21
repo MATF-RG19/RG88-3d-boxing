@@ -22,30 +22,37 @@ void draw_axes(float len) {
 void draw_box(){
 glPushMatrix();
   glLineWidth(2);
-    glTranslatef(3,2,3);
-    glColor3f(0.4,0.2,0.30);
-    glutWireCube(0.4);
-    glColor3f(0.4,0,0.24);
-    glutSolidCube(0.4);
+    glTranslatef(2,0.28,0);
+    glRotatef(45,0,1,0);
+    glColor3f(0.3254,0.035294,0.2196);
+    glutWireCube(0.3);
+    glColor3f(0.3254,0.035294,0.2196);
+    glutSolidCube(0.3);
     
 glPopMatrix();   
 
 }
 void draw_path(){
-
     glPushMatrix();
-        glColor3f(0.8, 0.6, 0.584); 
-        glRotatef(45,0,1,0);
-        glTranslatef(0,-1.2, 1.5);
-        glScalef(2, -5, -9);
+        glColor3f(0.31, 0.25490, 0.290196); 
+        glScalef(100, 0.1, 1);
         glutSolidCube(1);
     glPopMatrix();
 }
 void draw_ball(){
-       glPushMatrix();
-         glTranslatef(4.5,2,4.5);
-        glColor3f(0.4, 0.2, 0.30); 
-        glutSolidSphere(0.1,100,50);
+    glPushMatrix();
+        glTranslatef(0,0.15,0);
+        glColor3f(0.37, 0.12, 0.250); 
+        glutSolidSphere(0.08,100,50);
     glPopMatrix();
+}
+void draw_sky(){
+    glPushMatrix();
+       glColor3f(0, 0, 0.2); 
+       glTranslatef(4,1,0);
+       glScalef(3.2, 1, -7);
+       glutSolidCube(1);
+    glPopMatrix();
+      
 }
 

@@ -31,8 +31,9 @@ int main(int argc, char **argv){
     
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
-    glClearColor(0, 0, 0, 0);
+    glClearColor(0.15, 0.1, 0.19, 0);
     glutMainLoop();
 
     return 0;
@@ -56,6 +57,8 @@ void on_reshape(int width, int height) {
 
 
 void on_display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     GLfloat light_position[] = { 0, 1, 1, 0};
 
     GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1 };
@@ -72,12 +75,6 @@ void on_display() {
 
     GLfloat shininess = 20;
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(6, 3, 6, 0.5, 1, 0.5, 0, 1, 0);
-
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -88,14 +85,23 @@ void on_display() {
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
-    glMaterialf(GL_FRONT, GL_SHININESS, shininess); 
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt( -2.4, 0.8, 0,
+               2, 0.28, 0,
+               0, 1, 0);
+
+    //draw_axes(50);         
 
 
     
     draw_box();
     draw_path();
     draw_ball();
-    
+    draw_sky();
     
     
     glutSwapBuffers();

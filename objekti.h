@@ -11,6 +11,6 @@ void draw_axes(float len);
 void draw_box();
 void draw_path();
 void draw_ball();
-
+void draw_sky();
 
 #endif
