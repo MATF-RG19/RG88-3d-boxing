@@ -19,6 +19,25 @@ void draw_axes(float len) {
   
     glEnable(GL_LIGHTING);
 }
+void draw_seperation_lines(float len) {
+	glDisable(GL_LIGHTING);
+
+	glTranslatef(0,0.1,0);
+	glBegin(GL_LINES);
+		glColor3f(1,1,1);
+        glVertex3f(0,0,0.35);
+        glVertex3f(len,0,0.35);
+
+        glVertex3f(0,0,-0.35);
+        glVertex3f(len,0,-0.35);
+    glEnd();
+
+    glTranslatef(0,-0.1,0);
+
+
+    
+    glEnable(GL_LIGHTING);    
+}
 void draw_box(){
 glPushMatrix();
   glLineWidth(2);
@@ -35,7 +54,7 @@ glPopMatrix();
 void draw_path(){
     glPushMatrix();
         glColor3f(0.31, 0.25490, 0.290196); 
-        glScalef(100, 0.1, 1);
+        glScalef(100, 0.1, 0.7);
         glutSolidCube(1);
     glPopMatrix();
 }
@@ -54,5 +73,72 @@ void draw_sky(){
        glutSolidCube(1);
     glPopMatrix();
       
+}
+
+void draw_ground(){
+glPushMatrix();
+		glColor3f(0.85, 0.511, 0.9);
+		glTranslatef(3,0,8);
+		glScalef(100,0.1,20);
+		glutSolidCube(0.7);
+	glPopMatrix();
+
+	glPushMatrix();
+		glColor3f(0.85, 0.511, 0.9);
+		glTranslatef(3,0,-8);
+		glScalef(100,0.1,20);
+		glutSolidCube(0.7);
+	glPopMatrix();
+
+}
+
+void draw_scene() {
+
+	//draw_seperation_lines(50);
+	glPushMatrix();
+    	draw_path();
+    	glTranslatef(0,0,0.7);
+    	draw_path();
+    	glTranslatef(0,0,-1.4);
+    	draw_path();
+    glPopMatrix();
+
+    glPushMatrix();
+    	draw_ground();
+    glPopMatrix();
+
+    
+}
+
+void draw_boxes() {
+   glPushMatrix();
+	draw_box();
+	    for(int i = 0 ; i < 100; i++)
+	    {
+	    	glTranslatef(9,0,0);
+	    	draw_box();
+	    }
+    glPopMatrix();
+
+    glPushMatrix();
+    	glTranslatef(3,0,0.6);
+    	draw_box(); 
+    	for(int i = 0 ; i < 100 ; i++)
+	    {
+	    	glTranslatef(9,0,0);
+	    	draw_box();
+	    }
+    glPopMatrix();
+
+    glPushMatrix();
+    	glTranslatef(5,0,-0.6);
+    	draw_box(); 
+    	for(int i = 0 ; i < 100 ; i++)
+	    {
+	    	glTranslatef(9,0,0);
+	    	draw_box();
+	    }
+    glPopMatrix();
+
 }
 

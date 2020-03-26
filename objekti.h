@@ -12,5 +12,9 @@ void draw_box();
 void draw_path();
 void draw_ball();
 void draw_sky();
+void draw_scene();
+void draw_seperation_lines(float len);
+void draw_boxes();
+void draw_ground();
 
 #endif
