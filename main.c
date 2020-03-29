@@ -29,14 +29,10 @@ static bool goLeft = false;
 
 static void inicijalizacijaTekstura(void);
 
-#define FILENAME0 "Teksture/grafit.bmp"
-#define FILENAME1 "Teksture/pod1.bmp"
-#define FILENAME2 "Teksture/put.bmp"
+#define FILENAME0 "Teksture/plocicenebo.bmp"
+#define FILENAME1 "Teksture/plocicepod.bmp"
 
-static GLuint textures[3];
-/*Osvetljenje sam gledala sa casova vezbi, ali sam pravila
-u odnosu na to kako meni odgovaraju boje i razumela postavljanje
-koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/ 
+static GLuint textures[2];
 
 int main(int argc, char **argv){
    
@@ -155,6 +151,11 @@ void onTimer(int id){
 void on_display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+/*Osvetljenje sam gledala sa casova vezbi, ali sam pravila
+u odnosu na to kako meni odgovaraju boje i razumela postavljanje
+koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/ 
+
+
     GLfloat light_position[] = { 0, 1, 1, 0};
 
     GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1 };
@@ -191,12 +192,11 @@ void on_display() {
                0, 1, 0);
 
     //draw_axes(50);
-   
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
-    // pozadina
+    //Postavljanje pozadine, namestanje koordinata
   glBindTexture(GL_TEXTURE_2D, textures[0]);
   glBegin(GL_QUADS);
     glNormal3f(-1, 0, 0);
@@ -214,7 +214,7 @@ void on_display() {
     glVertex3f(20, 0, 11);
    glEnd();
 
-   //pod
+   //Postavljanje poda, namestanje koordinata
     glBindTexture(GL_TEXTURE_2D, textures[1]);
     glBegin(GL_QUADS);
 
@@ -241,8 +241,6 @@ void on_display() {
         glTranslatef(0,ballParameter,LeftRightMovement);
         draw_ball();
     glPopMatrix();
-    
-//draw_seperation_lines(20);
 
     //Iscrtavanje kutija
     glPushMatrix();
@@ -259,7 +257,7 @@ static void inicijalizacijaTekstura(void){
     Image * image;
     glEnable(GL_DEPTH_TEST);
 
-    /*ukljucivanje odredjenih fleova za lepljenje tekstura*/
+    /*ukljucivanje odredjenih flegova za lepljenje tekstura*/
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
@@ -289,17 +287,6 @@ static void inicijalizacijaTekstura(void){
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
- /*Ovo je tekstura puta
-    image_read(image, FILENAME2);
-    glBindTexture(GL_TEXTURE_2D, textures[2]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
-                 image->width, image->height, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
-*/
     /* Iskljucujemo aktivnu teksturu */
     glBindTexture(GL_TEXTURE_2D, 0);
     image_done(image);

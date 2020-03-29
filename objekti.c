@@ -1,5 +1,6 @@
 #include "objekti.h"
 
+//Crtanje osa, trenutno je zakomentarisana funkcija
 void draw_axes(float len) {
     glDisable(GL_LIGHTING);
   
@@ -19,6 +20,7 @@ void draw_axes(float len) {
   
     glEnable(GL_LIGHTING);
 }
+//Crtanje linija po putu, kojim se odvajaju 3 napravljene trake
 void draw_seperation_lines(float len) {
 	glDisable(GL_LIGHTING);
 
@@ -45,6 +47,7 @@ void draw_seperation_lines(float len) {
     
     glEnable(GL_LIGHTING);    
 }
+//Crtanje jedne kutije
 void draw_box(){
 glPushMatrix();
   glLineWidth(2);
@@ -58,6 +61,7 @@ glPushMatrix();
 glPopMatrix();   
 
 }
+//Crtanje puta
 void draw_path(){
     glPushMatrix();
       //  glColor3f(0, 0.2, 0.2); 
@@ -65,6 +69,7 @@ void draw_path(){
         glutSolidCube(1);
     glPopMatrix();
 }
+//Loptica
 void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
@@ -81,7 +86,7 @@ void draw_sky(){
     glPopMatrix();
       
 }
-
+//Crtanje poda, zakomentarisano je, jer se kasnije na ovo postavlja tekstura
 void draw_ground(){
 glPushMatrix();
 		glColor3f(0.85, 0.511, 0.9);
@@ -98,31 +103,29 @@ glPushMatrix();
 	glPopMatrix();
 
 }
-
+//Izgled 3 spojena "puta" iliti stazice
 void draw_scene() {
-
-	
 	glPushMatrix();
-         draw_seperation_lines(20);
-  
-	glColor3f(0,0.4,0.4);
+        draw_seperation_lines(20);
+       
+		glColor3f(0,0.4,0.4);
     	draw_path();
 
     	glTranslatef(0,0,0.7);
-	glColor3f(0,0.2,0.2);
+		glColor3f(0,0.2,0.2);
     	draw_path();
 
     	glTranslatef(0,0,-1.4);
     	draw_path();
-    glPopMatrix();
+  	 glPopMatrix();
 
-    glPushMatrix();
+   	 glPushMatrix();
     	//draw_ground();
-    glPopMatrix();
+   	 glPopMatrix();
 
     
 }
-
+//Crtanje dolazecih kutija, kroz 3 petlje
 void draw_boxes() {
    glPushMatrix();
 	draw_box();
@@ -144,14 +147,15 @@ void draw_boxes() {
     glPopMatrix();
 
     glPushMatrix();
-    	glTranslatef(5,0,-0.6);
+    	glTranslatef(3,0,-0.6);
     	draw_box(); 
-    	for(int i = 0 ; i < 100 ; i++)
+    	for(int i = 0 ; i < 100; i++)
 	    {
 	    	glTranslatef(9,0,0);
 	    	draw_box();
 	    }
     glPopMatrix();
-
 }
+
+
 

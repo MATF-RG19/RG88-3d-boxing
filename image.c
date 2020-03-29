@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include "image.h"
 
+//Ovaj fajl sam uzela od nekoga, da ga ne bih kucala ponovo, 
+//obzirom da je uvek isti.
+
 Image *image_init(int width, int height)
 {
 
