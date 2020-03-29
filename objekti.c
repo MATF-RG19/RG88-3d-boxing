@@ -22,14 +22,21 @@ void draw_axes(float len) {
 void draw_seperation_lines(float len) {
 	glDisable(GL_LIGHTING);
 
-	glTranslatef(0,0.1,0);
+	glTranslatef(-1,0.1,0);
 	glBegin(GL_LINES);
-		glColor3f(1,1,1);
-        glVertex3f(0,0,0.35);
-        glVertex3f(len,0,0.35);
+		glColor3f(0.1490,1,0.94);
+        glVertex3f(0,0,0.33);
+        glVertex3f(len,0,0.33);
 
-        glVertex3f(0,0,-0.35);
-        glVertex3f(len,0,-0.35);
+        glVertex3f(0,0,-0.33);
+        glVertex3f(len,0,-0.33);
+		
+		glVertex3f(0,0,-0.98);
+        glVertex3f(len,0,-0.98);
+ 		
+		glVertex3f(0,0,0.98);
+        glVertex3f(len,0,0.98);
+	
     glEnd();
 
     glTranslatef(0,-0.1,0);
@@ -43,9 +50,9 @@ glPushMatrix();
   glLineWidth(2);
     glTranslatef(2,0.28,0);
     glRotatef(45,0,1,0);
-    glColor3f(0.3254,0.035294,0.2196);
+    glColor3f(0.9529, 0.011, 0.921);
     glutWireCube(0.3);
-    glColor3f(0.3254,0.035294,0.2196);
+    glColor3f(0.4117,0.08235,0.47843);
     glutSolidCube(0.3);
     
 glPopMatrix();   
@@ -53,7 +60,7 @@ glPopMatrix();
 }
 void draw_path(){
     glPushMatrix();
-        glColor3f(0.31, 0.25490, 0.290196); 
+      //  glColor3f(0, 0.2, 0.2); 
         glScalef(100, 0.1, 0.7);
         glutSolidCube(1);
     glPopMatrix();
@@ -61,7 +68,7 @@ void draw_path(){
 void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
-        glColor3f(0.37, 0.12, 0.250); 
+        glColor3f(0.9529, 0.011, 0.921); 
         glutSolidSphere(0.08,100,50);
     glPopMatrix();
 }
@@ -94,17 +101,23 @@ glPushMatrix();
 
 void draw_scene() {
 
-	//draw_seperation_lines(50);
+	
 	glPushMatrix();
+         draw_seperation_lines(20);
+  
+	glColor3f(0,0.4,0.4);
     	draw_path();
+
     	glTranslatef(0,0,0.7);
+	glColor3f(0,0.2,0.2);
     	draw_path();
+
     	glTranslatef(0,0,-1.4);
     	draw_path();
     glPopMatrix();
 
     glPushMatrix();
-    	draw_ground();
+    	//draw_ground();
     glPopMatrix();
 
     

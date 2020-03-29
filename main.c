@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "objekti.h"
+#include "image.h"
 
 #define TIMER_INTERVAL 20
 #define TIMER_ID 0
@@ -26,6 +27,13 @@ static bool canJump = true;
 static bool goRight = false;
 static bool goLeft = false;
 
+static void inicijalizacijaTekstura(void);
+
+#define FILENAME0 "Teksture/grafit.bmp"
+#define FILENAME1 "Teksture/pod1.bmp"
+#define FILENAME2 "Teksture/put.bmp"
+
+static GLuint textures[3];
 /*Osvetljenje sam gledala sa casova vezbi, ali sam pravila
 u odnosu na to kako meni odgovaraju boje i razumela postavljanje
 koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/ 
@@ -41,6 +49,8 @@ int main(int argc, char **argv){
     
     glutFullScreen();
  
+    inicijalizacijaTekstura();
+    
     glutDisplayFunc(on_display);
     glutReshapeFunc(on_reshape);
     glutKeyboardFunc(on_keyboard);
@@ -101,7 +111,7 @@ void on_reshape(int width, int height) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    gluPerspective(30, (float) width/height, 1, 20);
+    gluPerspective(30, (float) width/height, 1, 50);
 }
 
 void onTimer(int id){
@@ -181,14 +191,58 @@ void on_display() {
                0, 1, 0);
 
     //draw_axes(50);
+   
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
 
+    // pozadina
+  glBindTexture(GL_TEXTURE_2D, textures[0]);
+  glBegin(GL_QUADS);
+    glNormal3f(-1, 0, 0);
+
+    glTexCoord2f(0, 0);
+    glVertex3f(20, 0, -11);
+
+    glTexCoord2f(0, 1);
+    glVertex3f(20, 6, -11);
+
+    glTexCoord2f(1, 1);
+    glVertex3f(20, 6, 11);
+
+    glTexCoord2f(1, 0);
+    glVertex3f(20, 0, 11);
+   glEnd();
+
+   //pod
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glBegin(GL_QUADS);
+
+        glNormal3f(0, 1, 0);
+        
+        glTexCoord2f(0, 0);
+        glVertex3f(-2, 0, -11);
+        
+        glTexCoord2f(0, 1);
+        glVertex3f(20, 0, -11);
+        
+        glTexCoord2f(1, 1);
+        glVertex3f(20,0, 11);
+        
+        glTexCoord2f(1, 0);
+        glVertex3f(-2, 0,11);
+  glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
     //Iscrtavanje okoline
     glPushMatrix();
         draw_scene();
         glTranslatef(0,ballParameter,LeftRightMovement);
         draw_ball();
     glPopMatrix();
+    
+//draw_seperation_lines(20);
 
     //Iscrtavanje kutija
     glPushMatrix();
@@ -197,4 +251,56 @@ void on_display() {
     glPopMatrix();
 
     glutSwapBuffers();
+}
+
+static void inicijalizacijaTekstura(void){
+    /*funkcija sa sedmog casa vezbi koja koristi biblioteku image.c*/
+
+    Image * image;
+    glEnable(GL_DEPTH_TEST);
+
+    /*ukljucivanje odredjenih fleova za lepljenje tekstura*/
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+
+    /*inicijalizacija*/
+    image = image_init(0, 0);
+    glGenTextures(2, textures);
+
+    /*Ovo je tekstura neba*/
+    image_read(image, FILENAME0);
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
+    /*Ovo je tekstura poda*/
+    image_read(image, FILENAME1);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
+ /*Ovo je tekstura puta
+    image_read(image, FILENAME2);
+    glBindTexture(GL_TEXTURE_2D, textures[2]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+*/
+    /* Iskljucujemo aktivnu teksturu */
+    glBindTexture(GL_TEXTURE_2D, 0);
+    image_done(image);
 }
