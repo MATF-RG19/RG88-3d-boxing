@@ -48,7 +48,7 @@ void draw_seperation_lines(float len) {
     
     glEnable(GL_LIGHTING);    
 }
-//Crtanje jedne kutije
+//Crtanje kutije
 void draw_box(float x,float z,int color){
 glPushMatrix();
     /*glLineWidth(2);
@@ -61,29 +61,94 @@ glPushMatrix();
     glutSolidCube(0.3);*/
 
     switch(color) {
-        case 0:
+        case 0: 
+		glPushMatrix();
             glTranslatef(x,0.28,z);
             glRotatef(45,0,1,0);
             glColor3f(0.9529, 0.011, 0.921);
             glutWireCube(0.3);
             glColor3f(0.4117,0.08235,0.47843);
             glutSolidCube(0.3);
-            break;
+		glPopMatrix();
+			/*Crtanje bodlji na kocki*/
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-45,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-90,1,0,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-135,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+        break;
+
         case 1:
+		glPushMatrix();
             glTranslatef(x,0.28,z);
-            glRotatef(45,0,1,0);
-            glColor3f(0.9529, 0.011, 0.921);
+           	glRotatef(45,0,1,0);
+            glColor3f(1, 0, 0);
             glutWireCube(0.3);
-            glColor3f(1,0,0);
+            glColor3f(0.923,0.05,0.07);
             glutSolidCube(0.3);
+		glPopMatrix();
+		/*Crtanje bodlji*/
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-45,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-90,1,0,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-135,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
             break;
+
         case 2:
+		glPushMatrix();
             glTranslatef(x,0.28,z);
             glRotatef(45,0,1,0);
-            glColor3f(0.9529, 0.011, 0.921);
+            glColor3f(0, 0, 1);
             glutWireCube(0.3);
-            glColor3f(1,1,0);
+            glColor3f(0.03,0.02,0.62);
             glutSolidCube(0.3); 
+		glPopMatrix();
+		/*Crtanje bodlji*/
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-45,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-90,1,0,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-135,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,100,100);
+		glPopMatrix();
             break;          
     }   
     
