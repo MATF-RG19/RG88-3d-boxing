@@ -1,6 +1,9 @@
 #include "objekti.h"
 
-//Crtanje osa, trenutno je zakomentarisana funkcija
+extern float endAnimation;
+extern float shrinkParameter;
+
+//Crtanje osa
 void draw_axes(float len) {
     glDisable(GL_LIGHTING);
   
@@ -42,21 +45,47 @@ void draw_seperation_lines(float len) {
     glEnd();
 
     glTranslatef(0,-0.1,0);
-
-
     
     glEnable(GL_LIGHTING);    
 }
 //Crtanje jedne kutije
-void draw_box(){
+void draw_box(float x,float z,int color){
 glPushMatrix();
-  glLineWidth(2);
+    /*glLineWidth(2);
+  
     glTranslatef(2,0.28,0);
     glRotatef(45,0,1,0);
     glColor3f(0.9529, 0.011, 0.921);
     glutWireCube(0.3);
     glColor3f(0.4117,0.08235,0.47843);
-    glutSolidCube(0.3);
+    glutSolidCube(0.3);*/
+
+    switch(color) {
+        case 0:
+            glTranslatef(x,0.28,z);
+            glRotatef(45,0,1,0);
+            glColor3f(0.9529, 0.011, 0.921);
+            glutWireCube(0.3);
+            glColor3f(0.4117,0.08235,0.47843);
+            glutSolidCube(0.3);
+            break;
+        case 1:
+            glTranslatef(x,0.28,z);
+            glRotatef(45,0,1,0);
+            glColor3f(0.9529, 0.011, 0.921);
+            glutWireCube(0.3);
+            glColor3f(1,0,0);
+            glutSolidCube(0.3);
+            break;
+        case 2:
+            glTranslatef(x,0.28,z);
+            glRotatef(45,0,1,0);
+            glColor3f(0.9529, 0.011, 0.921);
+            glutWireCube(0.3);
+            glColor3f(1,1,0);
+            glutSolidCube(0.3); 
+            break;          
+    }   
     
 glPopMatrix();   
 
@@ -73,8 +102,15 @@ void draw_path(){
 void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
-        glColor3f(0.9529, 0.011, 0.921); 
-        glutSolidSphere(0.08,100,50);
+        glColor3f(0.9529, 0.011, 0.921);
+        if(endAnimation)
+            glColor3f(1,0,0); 
+        glutSolidSphere(shrinkParameter,100,50);
+        /*if(endAnimation)
+        {
+            glColor3f(1,0,0);
+            glutSolidSphere(explosionParameter,100,50);
+        }*/
     glPopMatrix();
 }
 void draw_sky(){
@@ -86,7 +122,7 @@ void draw_sky(){
     glPopMatrix();
       
 }
-//Crtanje poda, zakomentarisano je, jer se kasnije na ovo postavlja tekstura
+//Crtanje poda
 void draw_ground(){
 glPushMatrix();
 		glColor3f(0.85, 0.511, 0.9);
@@ -103,7 +139,7 @@ glPushMatrix();
 	glPopMatrix();
 
 }
-//Izgled 3 spojena "puta" iliti stazice
+//Izgled 3 spojena "puta" 
 void draw_scene() {
 	glPushMatrix();
         draw_seperation_lines(20);
@@ -119,15 +155,14 @@ void draw_scene() {
     	draw_path();
   	 glPopMatrix();
 
-   	 glPushMatrix();
-    	//draw_ground();
-   	 glPopMatrix();
-
-    
+   
 }
+/*
 //Crtanje dolazecih kutija, kroz 3 petlje
 void draw_boxes() {
-   glPushMatrix();
+
+     glPushMatrix();
+   
 	draw_box();
 	    for(int i = 0 ; i < 100; i++)
 	    {
@@ -155,7 +190,11 @@ void draw_boxes() {
 	    	draw_box();
 	    }
     glPopMatrix();
-}
+
+
+    
+}*/
+
 
 
 

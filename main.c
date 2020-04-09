@@ -9,8 +9,11 @@
 #include "image.h"
 
 #define TIMER_INTERVAL 20
-#define TIMER_ID 0
+#define TIMER_ID1 0
+#define TIMER_ID2 1
+
 #define LEN 100
+#define BOXES_NUMBER 10
 
 static void on_display();
 static void on_reshape(int width, int height);
@@ -19,6 +22,7 @@ static void onTimer(int id);
 
 static float animationParameter = 0;
 static float animationOngoing = 0;
+float endAnimation = 0;
 static float ballParameter = 0;
 static float LeftRightMovement = 0;
 static bool shouldGoUp = true;
@@ -26,8 +30,22 @@ static bool shouldJump = false;
 static bool canJump = true;
 static bool goRight = false;
 static bool goLeft = false;
+float shrinkParameter = 0.08;
+
+//Struktura koja ce predstavljati svaku kutiju
+struct BOX {
+    float x;
+    float z;
+    int color;
+};
+
+//Pokazivac na prvu kutiju u redu
+int firstBox = 0;
+//Niz pokazivaca na pozicije kutija
+struct BOX boxes[BOXES_NUMBER];
 
 static void inicijalizacijaTekstura(void);
+static void inicijalizacijaPozicijaKutija(void);
 
 #define FILENAME0 "Teksture/plocicenebo.bmp"
 #define FILENAME1 "Teksture/plocicepod.bmp"
@@ -43,8 +61,9 @@ int main(int argc, char **argv){
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     
-    glutFullScreen();
- 
+    //glutFullScreen();
+
+    inicijalizacijaPozicijaKutija();
     inicijalizacijaTekstura();
     
     glutDisplayFunc(on_display);
@@ -68,6 +87,10 @@ void on_keyboard(unsigned char key, int x, int y) {
           ballParameter=0;
           shouldGoUp = true;
           shouldJump = false;
+          firstBox = 0;
+          shrinkParameter = 0.08;
+          endAnimation = 0;
+          inicijalizacijaPozicijaKutija();
           glutPostRedisplay();
           break;
         case 's':
@@ -78,7 +101,7 @@ void on_keyboard(unsigned char key, int x, int y) {
         case 'G':
           if(!animationOngoing){
             animationOngoing = 1;
-            glutTimerFunc(TIMER_INTERVAL, onTimer, TIMER_ID);
+            glutTimerFunc(TIMER_INTERVAL, onTimer, TIMER_ID1);
           }
           break;
         case 32:
@@ -111,8 +134,8 @@ void on_reshape(int width, int height) {
 }
 
 void onTimer(int id){
-    if(id == TIMER_ID){
-        animationParameter+=0.1;
+    if(id == TIMER_ID1){
+        animationParameter+=0.2;
 
         if(shouldJump)
         {
@@ -141,20 +164,66 @@ void onTimer(int id){
             LeftRightMovement+=0.02;
         }
 
+        
+        for(int i = 0 ; i < BOXES_NUMBER ; i++)
+        {
+            boxes[i].x -= 0.125;
+        }
+
+
+
+        if(boxes[firstBox].x == -5)
+        {
+            boxes[firstBox].x = 85;
+            firstBox++;
+            //printf("Prosla prva sad je prva: %d\n",firstBox);
+
+            if(firstBox == BOXES_NUMBER)
+            {
+                firstBox = 0;
+            }
+        }
+        
+
+        if(boxes[firstBox].x == 0.25 
+         && (LeftRightMovement > boxes[firstBox].z-0.21 && LeftRightMovement < boxes[firstBox].z+0.21) && ballParameter < 0.3){
+
+            
+            switch(boxes[firstBox].color)
+            {
+                case 0:
+                    animationOngoing = 0;
+                    endAnimation = 1;
+                    break;
+                case 1:
+                    animationOngoing = 0;
+                    endAnimation = 1;
+                    break;
+                case 2:           
+                    animationOngoing = 0;
+                    endAnimation = 1;
+                    break;
+
+            }
+        }
+        
+
+    }else if(id == TIMER_ID2)
+    {
+        if(shrinkParameter > 0)
+             shrinkParameter -= 0.002;
+
     }
     glutPostRedisplay();
     if (animationOngoing)
-      glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID);
+      glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID1);
+    else if(endAnimation)
+        glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID2);
 }
 
 
 void on_display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-/*Osvetljenje sam gledala sa casova vezbi, ali sam pravila
-u odnosu na to kako meni odgovaraju boje i razumela postavljanje
-koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/ 
-
 
     GLfloat light_position[] = { 0, 1, 1, 0};
 
@@ -191,12 +260,11 @@ koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/
                2, 0.28, 0,
                0, 1, 0);
 
-    //draw_axes(50);
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
-    //Postavljanje pozadine, namestanje koordinata
+  //Postavljanje pozadine, namestanje koordinata
   glBindTexture(GL_TEXTURE_2D, textures[0]);
   glBegin(GL_QUADS);
     glNormal3f(-1, 0, 0);
@@ -243,10 +311,14 @@ koeficijenata, difuzne, spekularne i ambijentalne svetlosti..*/
     glPopMatrix();
 
     //Iscrtavanje kutija
-    glPushMatrix();
-        glTranslatef(-animationParameter,0,0);
-        draw_boxes();
-    glPopMatrix();
+    for(int i = 0 ; i < BOXES_NUMBER ; i++){
+
+        glPushMatrix();
+            draw_box(boxes[i].x,boxes[i].z,boxes[i].color);
+        glPopMatrix();
+    }
+
+        
 
     glutSwapBuffers();
 }
@@ -261,11 +333,11 @@ static void inicijalizacijaTekstura(void){
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 
-    /*inicijalizacija*/
+    //inicijalizacija
     image = image_init(0, 0);
     glGenTextures(2, textures);
 
-    /*Ovo je tekstura neba*/
+    //Tekstura neba
     image_read(image, FILENAME0);
     glBindTexture(GL_TEXTURE_2D, textures[0]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -276,7 +348,7 @@ static void inicijalizacijaTekstura(void){
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
-    /*Ovo je tekstura poda*/
+    //Tekstura poda
     image_read(image, FILENAME1);
     glBindTexture(GL_TEXTURE_2D, textures[1]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -287,7 +359,25 @@ static void inicijalizacijaTekstura(void){
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
-    /* Iskljucujemo aktivnu teksturu */
+    // Iskljucujemo aktivnu teksturu 
     glBindTexture(GL_TEXTURE_2D, 0);
     image_done(image);
+}
+
+void inicijalizacijaPozicijaKutija(void){
+    //Inicijalizacija pozicija svih kutija,koriscena srand funkcija 
+    //kako bi pri svakom novom pokretanju raspored kutija bio drugaciji
+    srand(time(NULL));
+    for(int i = 0 , j = 9; i < BOXES_NUMBER; i++ , j+=9) {
+        boxes[i].x = j;
+        if(rand()%3 == 0)
+            boxes[i].z = 0;
+        else if(rand()% 3 == 1)
+            boxes[i].z = 0.6;
+        else
+            boxes[i].z = -0.6;
+
+        boxes[i].color = rand()%3;
+    }
+
 }
