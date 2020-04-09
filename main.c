@@ -61,7 +61,7 @@ int main(int argc, char **argv){
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     
-    //glutFullScreen();
+    glutFullScreen();
 
     inicijalizacijaPozicijaKutija();
     inicijalizacijaTekstura();
