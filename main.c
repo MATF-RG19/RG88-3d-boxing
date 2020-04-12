@@ -19,6 +19,7 @@ static void on_display();
 static void on_reshape(int width, int height);
 static void on_keyboard(unsigned char key, int x, int y);
 static void onTimer(int id);
+static void draw_end_screen();
 
 static float animationParameter = 0;
 static float animationOngoing = 0;
@@ -31,6 +32,7 @@ static bool canJump = true;
 static bool goRight = false;
 static bool goLeft = false;
 float shrinkParameter = 0.08;
+int window_width, window_height;
 
 //Struktura koja ce predstavljati svaku kutiju
 struct BOX {
@@ -49,8 +51,9 @@ static void inicijalizacijaPozicijaKutija(void);
 
 #define FILENAME0 "Teksture/plocicenebo.bmp"
 #define FILENAME1 "Teksture/plocicepod.bmp"
+#define FILENAME2 "Teksture/endofgame.bmp"
 
-static GLuint textures[2];
+static GLuint textures[3];
 
 int main(int argc, char **argv){
    
@@ -84,6 +87,7 @@ void on_keyboard(unsigned char key, int x, int y) {
     switch(key) {
         case 'r':
           animationParameter = 0;
+		  animationOngoing=0;
           ballParameter=0;
           shouldGoUp = true;
           shouldJump = false;
@@ -91,7 +95,8 @@ void on_keyboard(unsigned char key, int x, int y) {
           shrinkParameter = 0.08;
           endAnimation = 0;
           inicijalizacijaPozicijaKutija();
-          glutPostRedisplay();
+         // glutPostRedisplay();
+		 glutDisplayFunc(on_display);
           break;
         case 's':
         case 'S':
@@ -126,7 +131,12 @@ void on_keyboard(unsigned char key, int x, int y) {
 }
 
 void on_reshape(int width, int height) {
+	//Podesavanje sirine i visine za end_screen;
+	window_width=width;
+	window_height=height;
+	//Podesavanje viewporta
     glViewport(0, 0, width, height);
+	//Projekcija
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
@@ -183,42 +193,38 @@ void onTimer(int id){
                 firstBox = 0;
             }
         }
+//Ako su ispunjena sva 3 ova uslova za koliziju onda se zavrsava animacija kretanja i krece animacija 
+//zavrsetka igre
         
-
         if(boxes[firstBox].x == 0.25 
          && (LeftRightMovement > boxes[firstBox].z-0.21 && LeftRightMovement < boxes[firstBox].z+0.21) && ballParameter < 0.3){
 
-            
-            switch(boxes[firstBox].color)
-            {
-                case 0:
-                    animationOngoing = 0;
-                    endAnimation = 1;
-                    break;
-                case 1:
-                    animationOngoing = 0;
-                    endAnimation = 1;
-                    break;
-                case 2:           
-                    animationOngoing = 0;
-                    endAnimation = 1;
-                    break;
-
-            }
+            animationOngoing = 0;
+            endAnimation = 1;
+         
         }
         
 
     }else if(id == TIMER_ID2)
     {
-        if(shrinkParameter > 0)
+ 
+        if(shrinkParameter > 0){
              shrinkParameter -= 0.002;
+			}
+  		else{
+			glutDisplayFunc(draw_end_screen);
+			}
 
     }
+	
     glutPostRedisplay();
+
+
     if (animationOngoing)
       glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID1);
     else if(endAnimation)
-        glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID2);
+       glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID2);
+	    
 }
 
 
@@ -359,6 +365,17 @@ static void inicijalizacijaTekstura(void){
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
+	//Tekstura zavresetka igre(end game)
+    image_read(image, FILENAME2);
+    glBindTexture(GL_TEXTURE_2D, textures[2]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
     // Iskljucujemo aktivnu teksturu 
     glBindTexture(GL_TEXTURE_2D, 0);
     image_done(image);
@@ -381,3 +398,46 @@ void inicijalizacijaPozicijaKutija(void){
     }
 
 }
+//Funkcija za postavljanje teksture za zavrsetak igre
+//Moralo je da se prebaci na ortografsku projekciju
+static void draw_end_screen(){
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textures[2]);
+
+    glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+    glLoadIdentity();
+  
+		gluOrtho2D(0, window_width,0, window_height);
+		
+		glMatrixMode(GL_MODELVIEW);
+  		glLoadIdentity();
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex2f(0,0);
+
+			glTexCoord2f(0, 1);
+			glVertex2f(0, window_height);
+
+			glTexCoord2f(1, 1);
+			glVertex2f(window_width,window_height);
+
+			glTexCoord2f(1, 0);
+			glVertex2f(window_width,0);
+		glEnd();
+		
+		glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	
+	glMatrixMode(GL_MODELVIEW);
+
+	glDisable(GL_TEXTURE_2D);
+
+    glutSwapBuffers();
+
+}
+

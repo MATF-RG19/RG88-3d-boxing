@@ -75,6 +75,7 @@ glPushMatrix();
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
 			glTranslatef(0,0,0.15);
+			glColor3f(0.67,0.121,0.65);
  			glutSolidCone(0.05,0.16,100,100);
 		glPopMatrix();
 		glPushMatrix();
@@ -95,9 +96,9 @@ glPushMatrix();
 		glPushMatrix();
             glTranslatef(x,0.28,z);
            	glRotatef(45,0,1,0);
-            glColor3f(1, 0, 0);
+            glColor3f(1, 0.2, 0.2);
             glutWireCube(0.3);
-            glColor3f(0.923,0.05,0.07);
+            glColor3f(0.48,0,0);
             glutSolidCube(0.3);
 		glPopMatrix();
 		/*Crtanje bodlji*/
@@ -105,6 +106,7 @@ glPushMatrix();
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
 			glTranslatef(0,0,0.15);
+			glColor3f(1,0.1,0.1);
  			glutSolidCone(0.05,0.16,100,100);
 		glPopMatrix();
 		glPushMatrix();
@@ -125,7 +127,7 @@ glPushMatrix();
 		glPushMatrix();
             glTranslatef(x,0.28,z);
             glRotatef(45,0,1,0);
-            glColor3f(0, 0, 1);
+            glColor3f(0.2,0.1,1);
             glutWireCube(0.3);
             glColor3f(0.03,0.02,0.62);
             glutSolidCube(0.3); 
@@ -135,6 +137,7 @@ glPushMatrix();
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
 			glTranslatef(0,0,0.15);
+			glColor3f(0.2,0.1,1);
  			glutSolidCone(0.05,0.16,100,100);
 		glPopMatrix();
 		glPushMatrix();
@@ -149,7 +152,8 @@ glPushMatrix();
 			glTranslatef(0,0,0.15);
  			glutSolidCone(0.05,0.16,100,100);
 		glPopMatrix();
-            break;          
+            break;   
+      
     }   
     
 glPopMatrix();   
@@ -222,43 +226,6 @@ void draw_scene() {
 
    
 }
-/*
-//Crtanje dolazecih kutija, kroz 3 petlje
-void draw_boxes() {
-
-     glPushMatrix();
-   
-	draw_box();
-	    for(int i = 0 ; i < 100; i++)
-	    {
-	    	glTranslatef(9,0,0);
-	    	draw_box();
-	    }
-    glPopMatrix();
-
-    glPushMatrix();
-    	glTranslatef(3,0,0.6);
-    	draw_box(); 
-    	for(int i = 0 ; i < 100 ; i++)
-	    {
-	    	glTranslatef(9,0,0);
-	    	draw_box();
-	    }
-    glPopMatrix();
-
-    glPushMatrix();
-    	glTranslatef(3,0,-0.6);
-    	draw_box(); 
-    	for(int i = 0 ; i < 100; i++)
-	    {
-	    	glTranslatef(9,0,0);
-	    	draw_box();
-	    }
-    glPopMatrix();
-
-
-    
-}*/
 
 
 
