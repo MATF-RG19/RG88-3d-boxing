@@ -180,7 +180,7 @@ void onTimer(int id){
         
         for(int i = 0 ; i < BOXES_NUMBER ; i++)
         {
-            boxes[i].x -= 0.125;
+            boxes[i].x -= 0.250;
         }
 
 
