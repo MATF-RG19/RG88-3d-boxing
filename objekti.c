@@ -213,11 +213,11 @@ void draw_scene() {
 	glPushMatrix();
         draw_seperation_lines(20);
        
-		glColor3f(0,0.4,0.4);
+		glColor3f(0,0.35,0.35);
     	draw_path();
 
     	glTranslatef(0,0,0.7);
-		glColor3f(0,0.2,0.2);
+		glColor3f(0,0.135,0.135);
     	draw_path();
 
     	glTranslatef(0,0,-1.4);

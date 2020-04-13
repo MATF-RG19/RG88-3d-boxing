@@ -20,6 +20,7 @@ static void on_reshape(int width, int height);
 static void on_keyboard(unsigned char key, int x, int y);
 static void onTimer(int id);
 static void draw_end_screen();
+static void draw_start_screen();
 
 static float animationParameter = 0;
 static float animationOngoing = 0;
@@ -52,8 +53,9 @@ static void inicijalizacijaPozicijaKutija(void);
 #define FILENAME0 "Teksture/plocicenebo.bmp"
 #define FILENAME1 "Teksture/plocicepod.bmp"
 #define FILENAME2 "Teksture/endofgame.bmp"
+#define FILENAME3 "Teksture/start.bmp"
 
-static GLuint textures[3];
+static GLuint textures[4];
 
 int main(int argc, char **argv){
    
@@ -65,15 +67,16 @@ int main(int argc, char **argv){
     glutCreateWindow(argv[0]);
     
     glutFullScreen();
-
+  
     inicijalizacijaPozicijaKutija();
     inicijalizacijaTekstura();
     
     glutDisplayFunc(on_display);
     glutReshapeFunc(on_reshape);
     glutKeyboardFunc(on_keyboard);
-    
 
+	glutDisplayFunc(draw_start_screen);
+    
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
@@ -95,8 +98,7 @@ void on_keyboard(unsigned char key, int x, int y) {
           shrinkParameter = 0.08;
           endAnimation = 0;
           inicijalizacijaPozicijaKutija();
-         // glutPostRedisplay();
-		 glutDisplayFunc(on_display);
+		  glutDisplayFunc(on_display);
           break;
         case 's':
         case 'S':
@@ -105,6 +107,7 @@ void on_keyboard(unsigned char key, int x, int y) {
         case 'g':
         case 'G':
           if(!animationOngoing){
+			glutDisplayFunc(on_display);
             animationOngoing = 1;
             glutTimerFunc(TIMER_INTERVAL, onTimer, TIMER_ID1);
           }
@@ -131,7 +134,7 @@ void on_keyboard(unsigned char key, int x, int y) {
 }
 
 void on_reshape(int width, int height) {
-	//Podesavanje sirine i visine za end_screen;
+	//Podesavanje sirine i visine za end_screen i start screen;
 	window_width=width;
 	window_height=height;
 	//Podesavanje viewporta
@@ -198,7 +201,6 @@ void onTimer(int id){
         
         if(boxes[firstBox].x == 0.25 
          && (LeftRightMovement > boxes[firstBox].z-0.21 && LeftRightMovement < boxes[firstBox].z+0.21) && ballParameter < 0.3){
-
             animationOngoing = 0;
             endAnimation = 1;
          
@@ -327,6 +329,7 @@ void on_display() {
         
 
     glutSwapBuffers();
+
 }
 
 static void inicijalizacijaTekstura(void){
@@ -341,7 +344,7 @@ static void inicijalizacijaTekstura(void){
 
     //inicijalizacija
     image = image_init(0, 0);
-    glGenTextures(2, textures);
+    glGenTextures(4, textures);
 
     //Tekstura neba
     image_read(image, FILENAME0);
@@ -368,6 +371,17 @@ static void inicijalizacijaTekstura(void){
 	//Tekstura zavresetka igre(end game)
     image_read(image, FILENAME2);
     glBindTexture(GL_TEXTURE_2D, textures[2]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
+
+    image_read(image, FILENAME3);
+    glBindTexture(GL_TEXTURE_2D, textures[3]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -440,4 +454,46 @@ static void draw_end_screen(){
     glutSwapBuffers();
 
 }
+//Funkcija za postavljanje teksture za pocetak igre
+static void draw_start_screen(){
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, textures[3]);
+
+    glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+    glLoadIdentity();
+  
+		gluOrtho2D(0, window_width,0, window_height);
+		
+		glMatrixMode(GL_MODELVIEW);
+  		glLoadIdentity();
+
+		glBegin(GL_QUADS);
+			glTexCoord2f(0, 0);
+			glVertex2f(0,0);
+
+			glTexCoord2f(0, 1);
+			glVertex2f(0, window_height);
+
+			glTexCoord2f(1, 1);
+			glVertex2f(window_width,window_height);
+
+			glTexCoord2f(1, 0);
+			glVertex2f(window_width,0);
+		glEnd();
+		
+		glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	
+	glMatrixMode(GL_MODELVIEW);
+
+	glDisable(GL_TEXTURE_2D);
+
+    glutSwapBuffers();
+
+}
+
 
