@@ -16,6 +16,7 @@ void draw_scene();
 void draw_seperation_lines(float len);
 void draw_boxes();
 void draw_ground();
+void draw_objects(float x,float z);
 
 
 #endif

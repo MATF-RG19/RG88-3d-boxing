@@ -3,7 +3,7 @@
 extern float endAnimation;
 extern float shrinkParameter;
 
-//Crtanje osa
+/*Crtanje x,y,z osa*/
 void draw_axes(float len) {
     glDisable(GL_LIGHTING);
   
@@ -23,7 +23,7 @@ void draw_axes(float len) {
   
     glEnable(GL_LIGHTING);
 }
-//Crtanje linija po putu, kojim se odvajaju 3 napravljene trake
+/*Crtanje linija po putu, kojim se odvajaju 3 napravljene trake*/
 void draw_seperation_lines(float len) {
 	glDisable(GL_LIGHTING);
 
@@ -48,17 +48,10 @@ void draw_seperation_lines(float len) {
     
     glEnable(GL_LIGHTING);    
 }
-//Crtanje kutije
+/*Iscrtavanje kutija u 3 trake*/
 void draw_box(float x,float z,int color){
-glPushMatrix();
-    /*glLineWidth(2);
-  
-    glTranslatef(2,0.28,0);
-    glRotatef(45,0,1,0);
-    glColor3f(0.9529, 0.011, 0.921);
-    glutWireCube(0.3);
-    glColor3f(0.4117,0.08235,0.47843);
-    glutSolidCube(0.3);*/
+
+	glPushMatrix();
 
     switch(color) {
         case 0: 
@@ -101,7 +94,7 @@ glPushMatrix();
             glColor3f(0.48,0,0);
             glutSolidCube(0.3);
 		glPopMatrix();
-		/*Crtanje bodlji*/
+		/*Crtanje bodlji na kocki*/
 		glPushMatrix();
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
@@ -132,7 +125,7 @@ glPushMatrix();
             glColor3f(0.03,0.02,0.62);
             glutSolidCube(0.3); 
 		glPopMatrix();
-		/*Crtanje bodlji*/
+		/*Crtanje bodlji na kocki*/
 		glPushMatrix();
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
@@ -156,18 +149,33 @@ glPushMatrix();
       
     }   
     
-glPopMatrix();   
+	glPopMatrix();   
 
 }
-//Crtanje puta
+/*Iscrtavanje drugih objekata*/
+void draw_objects(float x,float z){
+	glPushMatrix();
+    	glTranslatef(x,0.28,z);
+		glTranslatef(-5,0,0);
+		glRotatef(45,1,0,0);
+        glColor3f(0, 1, 0.7);
+        glutWireCube(0.15);
+        glColor3f(0,1,1);
+        glutSolidCube(0.15);
+	glPopMatrix();
+
+
+}
+/*Crtanje puta*/
 void draw_path(){
     glPushMatrix();
-      //  glColor3f(0, 0.2, 0.2); 
         glScalef(100, 0.1, 0.7);
         glutSolidCube(1);
     glPopMatrix();
 }
-//Loptica
+/*Funkcija za crtanje loptice i 
+smanjivanje iste kada dodje do 
+sudara sa kockom pomocu shrinkParametra*/
 void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
@@ -182,6 +190,7 @@ void draw_ball(){
         }*/
     glPopMatrix();
 }
+/*Prvobitno nebo*/
 void draw_sky(){
     glPushMatrix();
        glColor3f(0, 0, 0.2); 
@@ -191,7 +200,7 @@ void draw_sky(){
     glPopMatrix();
       
 }
-//Crtanje poda
+/*Prvobitan pod*/
 void draw_ground(){
 glPushMatrix();
 		glColor3f(0.85, 0.511, 0.9);
@@ -222,11 +231,6 @@ void draw_scene() {
 
     	glTranslatef(0,0,-1.4);
     	draw_path();
-  	 glPopMatrix();
-
-   
+  	 glPopMatrix(); 
 }
-
-
-
 
