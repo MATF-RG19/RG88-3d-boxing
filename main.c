@@ -33,6 +33,8 @@ static bool shouldJump = false;
 static bool canJump = true;
 static bool goRight = false;
 static bool goLeft = false;
+static float speed = 0.1;
+
 float shrinkParameter = 0.08;
 int window_width, window_height;
 
@@ -42,15 +44,22 @@ struct BOX {
     float z;
     int color;
 };
+
 /*Struktura za druge objekte u igrici*/
 struct OBJECT {
 float x;
 float z;
 };
+
 /*Pokazivac na prvu kutiju u redu*/
 int firstBox = 0;
 /*Pokazivac na prvi objekat u redu*/
 int firstObject=0;
+/*Pokazivac na poslednju kutiju u redu*/
+int lastBox = 9;
+/*Pokazivac na poslednji objekat u redu*/
+int lastObject = 9;
+
 /*Niz pokazivaca na pozicije kutija*/
 struct BOX boxes[BOXES_NUMBER];
 
@@ -93,7 +102,7 @@ int main(int argc, char **argv){
     glEnable(GL_COLOR_MATERIAL);
     glClearColor(0.15, 0.1, 0.19, 0);
     glutMainLoop();
-
+  
     return 0;
 }
 
@@ -106,6 +115,10 @@ void on_keyboard(unsigned char key, int x, int y) {
           shouldGoUp = true;
           shouldJump = false;
           firstBox = 0;
+		  firstObject = 0;
+		  lastBox = 9;
+		  lastObject = 9;
+		  speed = 0.1;
           shrinkParameter = 0.08;
           endAnimation = 0;
           inicijalizacijaPozicijaKutija();
@@ -161,6 +174,11 @@ void onTimer(int id){
     if(id == TIMER_ID1){
         animationParameter+=0.2;
 
+		if(speed<1){
+			speed+=0.0004;
+			//printf("%\n",speed);
+		}
+
         if(shouldJump)
         {
             if(ballParameter>=0.72)
@@ -188,13 +206,14 @@ void onTimer(int id){
    
         for(int i = 0 ; i < BOXES_NUMBER ; i++)
         {
-            boxes[i].x -= 0.125;
-			objects[i].x-=0.125;
+            boxes[i].x -= speed;
+			objects[i].x-= speed;
         }
 
-        if(boxes[firstBox].x == -5)
+        if(boxes[firstBox].x <= -5)
         {
-            boxes[firstBox].x = 85;
+            boxes[firstBox].x = boxes[lastBox].x+9;
+			lastBox = firstBox;
             firstBox++;
 			
 
@@ -203,9 +222,10 @@ void onTimer(int id){
                 firstBox = 0;
             }
         }
-		 if(objects[firstObject].x == -5)
+		 if(objects[firstObject].x <= -5)
         {
-            objects[firstObject].x = 85;
+            objects[firstObject].x = objects[lastObject].x+9;
+			lastObject = firstObject;
             firstObject++;
 			
 
@@ -217,7 +237,7 @@ void onTimer(int id){
 /*Ako su ispunjena sva 3 ova uslova za koliziju onda se zavrsava animacija kretanja i krece animacija 
 zavrsetka igre*/
         
-        if(boxes[firstBox].x == 0.25 
+        if(boxes[firstBox].x - 0.21 <= 0.08 && boxes[firstBox].x + 0.21 >= 0.08
          && (LeftRightMovement > boxes[firstBox].z-0.21 && LeftRightMovement < boxes[firstBox].z+0.21) && ballParameter < 0.3){
             animationOngoing = 0;
             endAnimation = 1;
@@ -429,20 +449,29 @@ void inicijalizacijaPozicijaKutija(void){
     srand(time(NULL));
     for(int i = 0 , j = 9; i < BOXES_NUMBER; i++ , j+=9) {
         boxes[i].x = j;
-		objects[i].x=j;
         if(rand()%3 == 0){
             boxes[i].z = 0;
-			objects[i].z=0;
 		}
         else if(rand()% 3 == 1){
             boxes[i].z = 0.6;
-			objects[i].z=0.6;
 		}
         else{
             boxes[i].z = -0.6;
-			objects[i].z=-0.6;
 		}
         boxes[i].color = rand()%3;
+    }
+	  for(int i = 0 , j = 9; i < OBJECT_NUMBER; i++ , j+=9) {
+        objects[i].x = j;
+        if(rand()%3 == 0){
+            objects[i].z = 0;
+		}
+        else if(rand()% 3 == 1){
+            objects[i].z = 0.6;
+		}
+        else{
+            objects[i].z = -0.6;
+		}
+        
     }
 
 }

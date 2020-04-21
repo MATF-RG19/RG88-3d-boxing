@@ -158,7 +158,7 @@ void draw_objects(float x,float z){
     	glTranslatef(x,0.28,z);
 		glTranslatef(-5,0,0);
 		glRotatef(45,1,0,0);
-        glColor3f(0, 1, 0.7);
+        glColor3f(0, 0.3, 0.3);
         glutWireCube(0.15);
         glColor3f(0,1,1);
         glutSolidCube(0.15);
@@ -183,11 +183,6 @@ void draw_ball(){
         if(endAnimation)
             glColor3f(1,0,0); 
         glutSolidSphere(shrinkParameter,100,50);
-        /*if(endAnimation)
-        {
-            glColor3f(1,0,0);
-            glutSolidSphere(explosionParameter,100,50);
-        }*/
     glPopMatrix();
 }
 /*Prvobitno nebo*/

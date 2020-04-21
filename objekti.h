@@ -6,6 +6,7 @@
 #include <math.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 void draw_axes(float len);
 void draw_box(float x,float z,int color);
@@ -17,6 +18,7 @@ void draw_seperation_lines(float len);
 void draw_boxes();
 void draw_ground();
 void draw_objects(float x,float z);
+
 
 
 #endif
