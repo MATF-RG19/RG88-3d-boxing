@@ -34,6 +34,7 @@ static bool canJump = true;
 static bool goRight = false;
 static bool goLeft = false;
 static float speed = 0.1;
+int rotationParameter = 0;
 
 float shrinkParameter = 0.08;
 int window_width, window_height;
@@ -119,6 +120,7 @@ void on_keyboard(unsigned char key, int x, int y) {
 		  lastBox = 9;
 		  lastObject = 9;
 		  speed = 0.1;
+		  rotationParameter=0;
           shrinkParameter = 0.08;
           endAnimation = 0;
           inicijalizacijaPozicijaKutija();
@@ -173,9 +175,10 @@ void on_reshape(int width, int height) {
 void onTimer(int id){
     if(id == TIMER_ID1){
         animationParameter+=0.2;
+		rotationParameter+=3;
 
 		if(speed<1){
-			speed+=0.0004;
+			speed+=0.0005;
 			//printf("%\n",speed);
 		}
 
@@ -238,7 +241,7 @@ void onTimer(int id){
 zavrsetka igre*/
         
         if(boxes[firstBox].x - 0.21 <= 0.08 && boxes[firstBox].x + 0.21 >= 0.08
-         && (LeftRightMovement > boxes[firstBox].z-0.21 && LeftRightMovement < boxes[firstBox].z+0.21) && ballParameter < 0.3){
+         && (LeftRightMovement +0.08> boxes[firstBox].z-0.21 && LeftRightMovement -0.08< boxes[firstBox].z+0.21) && ballParameter < 0.46){
             animationOngoing = 0;
             endAnimation = 1;
          
@@ -318,16 +321,16 @@ void on_display() {
     glNormal3f(-1, 0, 0);
 
     glTexCoord2f(0, 0);
-    glVertex3f(20, 0, -11);
+    glVertex3f(30, 0, -16);
 
     glTexCoord2f(0, 1);
-    glVertex3f(20, 6, -11);
+    glVertex3f(30, 6, -16);
 
     glTexCoord2f(1, 1);
-    glVertex3f(20, 6, 11);
+    glVertex3f(30, 6, 16);
 
     glTexCoord2f(1, 0);
-    glVertex3f(20, 0, 11);
+    glVertex3f(30, 0, 16);
    glEnd();
 
    /*Postavljanje poda, namestanje koordinata*/
@@ -338,16 +341,16 @@ void on_display() {
         glNormal3f(0, 1, 0);
         
         glTexCoord2f(0, 0);
-        glVertex3f(-2, 0, -11);
+        glVertex3f(-2, 0, -16);
         
         glTexCoord2f(0, 1);
-        glVertex3f(20, 0, -11);
+        glVertex3f(30, 0, -16);
         
         glTexCoord2f(1, 1);
-        glVertex3f(20,0, 11);
+        glVertex3f(30,0, 16);
         
         glTexCoord2f(1, 0);
-        glVertex3f(-2, 0,11);
+        glVertex3f(-2, 0,16);
   glEnd();
 
     glDisable(GL_TEXTURE_2D);
@@ -427,7 +430,7 @@ static void inicijalizacijaTekstura(void){
                  image->width, image->height, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
 
-
+	/*Tekstura pocetka igre(start game)*/
     image_read(image, FILENAME3);
     glBindTexture(GL_TEXTURE_2D, textures[3]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

@@ -2,6 +2,7 @@
 
 extern float endAnimation;
 extern float shrinkParameter;
+extern int rotationParameter;
 
 /*Crtanje x,y,z osa*/
 void draw_axes(float len) {
@@ -180,9 +181,10 @@ void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
         glColor3f(0.9529, 0.011, 0.921);
+		glRotatef(rotationParameter,0,0,-1);
         if(endAnimation)
             glColor3f(1,0,0); 
-        glutSolidSphere(shrinkParameter,100,50);
+        glutSolidSphere(shrinkParameter,30,30);
     glPopMatrix();
 }
 /*Prvobitno nebo*/
