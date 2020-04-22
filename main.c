@@ -32,9 +32,10 @@ static bool shouldGoUp = true;
 static bool shouldJump = false;
 static bool canJump = true;
 static bool goRight = false;
-static bool goLeft = false;
+bool goLeft = false;
 static float speed = 0.1;
 int rotationParameter = 0;
+int rotationObject = 0;
 
 float shrinkParameter = 0.08;
 int window_width, window_height;
@@ -74,8 +75,8 @@ static void inicijalizacijaPozicijaKutija(void);
 #define FILENAME1 "Teksture/plocicepod.bmp"
 #define FILENAME2 "Teksture/endofgame.bmp"
 #define FILENAME3 "Teksture/start.bmp"
-
-static GLuint textures[4];
+#define FILENAME4 "Teksture/lopta.bmp"
+/*static*/ GLuint textures[5];
 
 int main(int argc, char **argv){
    
@@ -121,6 +122,7 @@ void on_keyboard(unsigned char key, int x, int y) {
 		  lastObject = 9;
 		  speed = 0.1;
 		  rotationParameter=0;
+		  rotationObject=0;
           shrinkParameter = 0.08;
           endAnimation = 0;
           inicijalizacijaPozicijaKutija();
@@ -175,7 +177,8 @@ void on_reshape(int width, int height) {
 void onTimer(int id){
     if(id == TIMER_ID1){
         animationParameter+=0.2;
-		rotationParameter+=3;
+		rotationParameter+=5;
+		rotationObject+=3;
 
 		if(speed<1){
 			speed+=0.0005;
@@ -395,7 +398,7 @@ static void inicijalizacijaTekstura(void){
 
     /*inicijalizacija*/
     image = image_init(0, 0);
-    glGenTextures(4, textures);
+    glGenTextures(5, textures);
 
     /*Tekstura neba*/
     image_read(image, FILENAME0);
@@ -433,6 +436,17 @@ static void inicijalizacijaTekstura(void){
 	/*Tekstura pocetka igre(start game)*/
     image_read(image, FILENAME3);
     glBindTexture(GL_TEXTURE_2D, textures[3]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+                 image->width, image->height, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
+
+	/*Tekstura lopte*/
+    image_read(image, FILENAME4);
+    glBindTexture(GL_TEXTURE_2D, textures[4]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

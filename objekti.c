@@ -3,6 +3,11 @@
 extern float endAnimation;
 extern float shrinkParameter;
 extern int rotationParameter;
+extern int rotationObject;
+extern GLuint textures[5];
+extern bool goLeft;
+
+GLUquadric* sphere;
 
 /*Crtanje x,y,z osa*/
 void draw_axes(float len) {
@@ -158,13 +163,16 @@ void draw_objects(float x,float z){
 	glPushMatrix();
     	glTranslatef(x,0.28,z);
 		glTranslatef(-5,0,0);
+		glTranslatef(0,-0.1,0);
+		glRotatef(rotationObject,0,-1,0);
 		glRotatef(45,1,0,0);
-        glColor3f(0, 0.3, 0.3);
+		glScalef(0.3,1,1);
+        glColor3f(1, 1, 0);
         glutWireCube(0.15);
-        glColor3f(0,1,1);
+        glColor3f(0.6902,0.5294,0);
         glutSolidCube(0.15);
+	
 	glPopMatrix();
-
 
 }
 /*Crtanje puta*/
@@ -177,6 +185,30 @@ void draw_path(){
 /*Funkcija za crtanje loptice i 
 smanjivanje iste kada dodje do 
 sudara sa kockom pomocu shrinkParametra*/
+
+void draw_ball(){
+    glPushMatrix();
+        glTranslatef(0,0.15,0);
+		glRotatef(rotationParameter,0,0,-1);
+		
+        if(endAnimation){
+            glColor3f(1,0,0); 
+		}
+		 /*Postavljanje teksture na loptu
+		 Deo ispod kopiran je sa githuba od koleginice*/
+   		 sphere=gluNewQuadric();
+   		 glEnable(GL_TEXTURE_2D);
+    	 gluQuadricDrawStyle(sphere, GLU_FILL);
+   		 glBindTexture(GL_TEXTURE_2D, textures[4]);
+   		 gluQuadricTexture(sphere, GL_TRUE);
+   		 gluQuadricNormals(sphere, GLU_SMOOTH);
+   		 gluSphere(sphere, shrinkParameter, 30, 30);
+
+   		 glDisable(GL_TEXTURE_2D);
+   		 glBindTexture(GL_TEXTURE_2D,0);
+    glPopMatrix();
+}
+/*
 void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
@@ -186,7 +218,7 @@ void draw_ball(){
             glColor3f(1,0,0); 
         glutSolidSphere(shrinkParameter,30,30);
     glPopMatrix();
-}
+}*/
 /*Prvobitno nebo*/
 void draw_sky(){
     glPushMatrix();
