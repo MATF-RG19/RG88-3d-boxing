@@ -32,10 +32,12 @@ void draw_axes(float len) {
 /*Crtanje linija po putu, kojim se odvajaju 3 napravljene trake*/
 void draw_seperation_lines(float len) {
 	glDisable(GL_LIGHTING);
-
+	
 	glTranslatef(-1,0.1,0);
+	glLineWidth(2);
 	glBegin(GL_LINES);
 		glColor3f(0.1490,1,0.94);
+		
         glVertex3f(0,0,0.33);
         glVertex3f(len,0,0.33);
 
@@ -58,7 +60,7 @@ void draw_seperation_lines(float len) {
 void draw_box(float x,float z,int color){
 
 	glPushMatrix();
-
+	glLineWidth(1);
     switch(color) {
         case 0: 
 		glPushMatrix();
@@ -227,8 +229,8 @@ void draw_sky(){
        glScalef(3.2, 1, -7);
        glutSolidCube(1);
     glPopMatrix();
-      
 }
+
 /*Prvobitan pod*/
 void draw_ground(){
 glPushMatrix();
@@ -249,7 +251,7 @@ glPushMatrix();
 //Izgled 3 spojena "puta" 
 void draw_scene() {
 	glPushMatrix();
-        draw_seperation_lines(20);
+        draw_seperation_lines(30);
        
 		glColor3f(0,0.35,0.35);
     	draw_path();

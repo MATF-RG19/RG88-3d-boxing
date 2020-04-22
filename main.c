@@ -177,7 +177,7 @@ void on_reshape(int width, int height) {
 void onTimer(int id){
     if(id == TIMER_ID1){
         animationParameter+=0.2;
-		rotationParameter+=5;
+		rotationParameter+=6;
 		rotationObject+=3;
 
 		if(speed<1){
