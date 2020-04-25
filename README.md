@@ -1,4 +1,4 @@
-# :box RG88-3d-boxing
+# :small_orange_diamond: 3d-boxing
 ---
 
 ### :book: Opis:
@@ -12,9 +12,9 @@ jer se povecava brzina.
 <kbd>G</kbd> / <kbd>g</kbd> Startovanje igrice <br>
 <kbd>A</kbd> / <kbd>a</kbd> Loptica ide levo  <br>
 <kbd>D</kbd> / <kbd>d</kbd> Loptica ide desno <br>
-<kbd>Space</kbd> / <kbd>r</kbd> Loptica skace <br>
+<kbd>Space</kbd> Loptica skace <br>
 <kbd>R</kbd> / <kbd>r</kbd> Ponovno pokretanje igre <br>
-<kbd>S</kbd> / <kbd>r</kbd> Zaustavljanje igre <br>
+<kbd>S</kbd> / <kbd>s</kbd> Zaustavljanje igre <br>
 
 ---
 
