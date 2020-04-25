@@ -15,6 +15,7 @@ jer se povecava brzina.
 <kbd>Space</kbd> / <kbd>r</kbd> Loptica skace <br>
 <kbd>R</kbd> / <kbd>r</kbd> Ponovno pokretanje igre <br>
 <kbd>S</kbd> / <kbd>r</kbd> Zaustavljanje igre <br>
+
 ---
 
 ### :electric_plug: Uputstvo za instalaciju i pokretanje:
