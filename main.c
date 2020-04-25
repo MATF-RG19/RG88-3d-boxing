@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "objekti.h"
 #include "image.h"
@@ -26,19 +27,26 @@ static void draw_start_screen();
 static float animationParameter = 0;
 static float animationOngoing = 0;
 float endAnimation = 0;
+//Parametri za lopticu
 static float ballParameter = 0;
 static float LeftRightMovement = 0;
 static bool shouldGoUp = true;
 static bool shouldJump = false;
 static bool canJump = true;
 static bool goRight = false;
-bool goLeft = false;
-static float speed = 0.1;
+static bool goLeft = false;
+//brzina kretanja
+static float speed= 0.1;
+//rotacijski parametar za lopticu 
 int rotationParameter = 0;
+//rotacija zutih objekata
 int rotationObject = 0;
-
+//poluprecnik loptice
 float shrinkParameter = 0.08;
+//sirina i visina prozora
 int window_width, window_height;
+
+int score = 0;
 
 /*Struktura koja ce predstavljati svaku kutiju*/
 struct BOX {
@@ -46,7 +54,6 @@ struct BOX {
     float z;
     int color;
 };
-
 /*Struktura za druge objekte u igrici*/
 struct OBJECT {
 float x;
@@ -87,7 +94,7 @@ int main(int argc, char **argv){
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     
-    glutFullScreen();
+  //  glutFullScreen();
   
     inicijalizacijaPozicijaKutija();
     inicijalizacijaTekstura();
@@ -98,7 +105,7 @@ int main(int argc, char **argv){
     
 	/*pozivanje funkcije za start ekran*/
 	glutDisplayFunc(draw_start_screen);
-    
+	 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
@@ -111,6 +118,7 @@ int main(int argc, char **argv){
 void on_keyboard(unsigned char key, int x, int y) {
     switch(key) {
         case 'r':
+		  /*resetovanje svih parametara*/
           animationParameter = 0;
 		  animationOngoing=0;
           ballParameter=0;
@@ -125,15 +133,18 @@ void on_keyboard(unsigned char key, int x, int y) {
 		  rotationObject=0;
           shrinkParameter = 0.08;
           endAnimation = 0;
+		  score=0;
           inicijalizacijaPozicijaKutija();
 		  glutDisplayFunc(on_display);
           break;
         case 's':
         case 'S':
+		  /*zaustavljanje*/
           animationOngoing = 0;
           break;
         case 'g':
         case 'G':
+		  /*pokretanje*/
           if(!animationOngoing){
 			glutDisplayFunc(on_display);
             animationOngoing = 1;
@@ -148,10 +159,12 @@ void on_keyboard(unsigned char key, int x, int y) {
             }
             break; 
         case 'a':
+		case 'A':
             goLeft=true;
             goRight=false;
             break;
         case 'd':
+		case 'D':
             goRight=true;
             goLeft=false;
             break;            
@@ -182,7 +195,6 @@ void onTimer(int id){
 
 		if(speed<1){
 			speed+=0.0005;
-			//printf("%\n",speed);
 		}
 
         if(shouldJump)
@@ -243,13 +255,18 @@ void onTimer(int id){
 /*Ako su ispunjena sva 3 ova uslova za koliziju onda se zavrsava animacija kretanja i krece animacija 
 zavrsetka igre*/
         
-        if(boxes[firstBox].x - 0.21 <= 0.08 && boxes[firstBox].x + 0.21 >= 0.08
+        if(boxes[firstBox].x - 0.21 <= 0.08 && boxes[firstBox].x + 0.21 >= -0.08
          && (LeftRightMovement +0.08> boxes[firstBox].z-0.21 && LeftRightMovement -0.08< boxes[firstBox].z+0.21) && ballParameter < 0.46){
             animationOngoing = 0;
             endAnimation = 1;
          
         }
-        
+	/*
+     	if(objects[firstObject].x<=0.08 && objects[firstObject].x>=-0.09
+			&& LeftRightMovement+0.08>objects[firstObject].z-0.11*0.75/2 && LeftRightMovement-0.08>objects[firstObject].z+0.11*0.75/2
+			&& ballParameter < 0.11*1.25){
+			printf("jej\n");
+		}*/
 
     }else if(id == TIMER_ID2)
     {
@@ -264,7 +281,7 @@ zavrsetka igre*/
     }
 	
     glutPostRedisplay();
-
+    
     if (animationOngoing)
       glutTimerFunc(TIMER_INTERVAL,onTimer,TIMER_ID1);
     else if(endAnimation)
@@ -294,6 +311,15 @@ void on_display() {
 
     GLfloat shininess = 20;
 
+	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt( -2.4, 0.8, 0,
+               2, 0.28, 0,
+               0, 1, 0);
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);	
+
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -307,17 +333,7 @@ void on_display() {
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt( -2.4, 0.8, 0,
-               2, 0.28, 0,
-               0, 1, 0);
-
-
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_TEXTURE_2D);
-
-  /*Postavljanje pozadine, namestanje koordinata*/
+  /*Postavljanje koordinata pozadine*/
   glBindTexture(GL_TEXTURE_2D, textures[0]);
 
   glBegin(GL_QUADS);
@@ -336,7 +352,7 @@ void on_display() {
     glVertex3f(30, 0, 16);
    glEnd();
 
-   /*Postavljanje poda, namestanje koordinata*/
+   /*Postavljanje koordinata poda*/
     glBindTexture(GL_TEXTURE_2D, textures[1]);
 
     glBegin(GL_QUADS);
@@ -379,9 +395,11 @@ void on_display() {
             draw_objects(objects[i].x,objects[i].z);
         glPopMatrix();
     }
-	
+		glDisable(GL_LIGHTING);
+  draw_score();
+glEnable(GL_LIGHTING);
 
-        
+
     glutSwapBuffers();
 
 }
@@ -464,30 +482,27 @@ void inicijalizacijaPozicijaKutija(void){
     /*Inicijalizacija pozicija svih kutija,koriscena srand funkcija 
     kako bi pri svakom novom pokretanju raspored kutija bio drugaciji*/
     srand(time(NULL));
+
     for(int i = 0 , j = 9; i < BOXES_NUMBER; i++ , j+=9) {
         boxes[i].x = j;
-        if(rand()%3 == 0){
+        if(rand()%3 == 0)
             boxes[i].z = 0;
-		}
-        else if(rand()% 3 == 1){
+        else if(rand()% 3 == 1)
             boxes[i].z = 0.6;
-		}
-        else{
+        else
             boxes[i].z = -0.6;
-		}
+
         boxes[i].color = rand()%3;
     }
+
 	  for(int i = 0 , j = 9; i < OBJECT_NUMBER; i++ , j+=9) {
         objects[i].x = j;
-        if(rand()%3 == 0){
+        if(rand()%3 == 0)
             objects[i].z = 0;
-		}
-        else if(rand()% 3 == 1){
+        else if(rand()% 3 == 1)
             objects[i].z = 0.6;
-		}
-        else{
+        else
             objects[i].z = -0.6;
-		}
         
     }
 

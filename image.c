@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "image.h"
 
-/*Fajl uzet, s' obzirom da je uvek isti*/
+/*Fajl image.c i image.h je kopiran*/
 
 Image *image_init(int width, int height)
 {
@@ -146,3 +146,4 @@ void image_read(Image *image, char *filename)
     /* Zatvara se fajl. */
     fclose(file);
 }
+

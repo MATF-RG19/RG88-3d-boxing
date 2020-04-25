@@ -1,4 +1,5 @@
 #include "objekti.h"
+#include <string.h>
 
 extern float endAnimation;
 extern float shrinkParameter;
@@ -6,6 +7,7 @@ extern int rotationParameter;
 extern int rotationObject;
 extern GLuint textures[5];
 extern bool goLeft;
+extern int score, window_width, window_height;
 
 GLUquadric* sphere;
 
@@ -34,7 +36,7 @@ void draw_seperation_lines(float len) {
 	glDisable(GL_LIGHTING);
 	
 	glTranslatef(-1,0.1,0);
-	glLineWidth(2);
+	glLineWidth(2.5);
 	glBegin(GL_LINES);
 		glColor3f(0.1490,1,0.94);
 		
@@ -60,46 +62,16 @@ void draw_seperation_lines(float len) {
 void draw_box(float x,float z,int color){
 
 	glPushMatrix();
-	glLineWidth(1);
+	glLineWidth(2);
     switch(color) {
         case 0: 
+		/*Crtanje kocke*/
 		glPushMatrix();
             glTranslatef(x,0.28,z);
             glRotatef(45,0,1,0);
-            glColor3f(0.9529, 0.011, 0.921);
+            glColor3f(0.4237,0.08235,0.47843);
             glutWireCube(0.3);
-            glColor3f(0.4117,0.08235,0.47843);
-            glutSolidCube(0.3);
-		glPopMatrix();
-			/*Crtanje bodlji na kocki*/
-		glPushMatrix();
-			glTranslatef(x,0.28,z);
-			glRotatef(-45,0,1,0);
-			glTranslatef(0,0,0.15);
-			glColor3f(0.67,0.121,0.65);
- 			glutSolidCone(0.05,0.16,100,100);
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(x,0.28,z);
-			glRotatef(-90,1,0,0);
-			glTranslatef(0,0,0.15);
- 			glutSolidCone(0.05,0.16,100,100);
-		glPopMatrix();
-		glPushMatrix();
-			glTranslatef(x,0.28,z);
-			glRotatef(-135,0,1,0);
-			glTranslatef(0,0,0.15);
- 			glutSolidCone(0.05,0.16,100,100);
-		glPopMatrix();
-        break;
-
-        case 1:
-		glPushMatrix();
-            glTranslatef(x,0.28,z);
-           	glRotatef(45,0,1,0);
-            glColor3f(1, 0.2, 0.2);
-            glutWireCube(0.3);
-            glColor3f(0.48,0,0);
+			glColor3f(0.498039216, 0.2, 1);
             glutSolidCube(0.3);
 		glPopMatrix();
 		/*Crtanje bodlji na kocki*/
@@ -107,8 +79,40 @@ void draw_box(float x,float z,int color){
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
 			glTranslatef(0,0,0.15);
-			glColor3f(1,0.1,0.1);
- 			glutSolidCone(0.05,0.16,100,100);
+			glColor3f(0.2,0,0.4);
+ 			glutSolidCone(0.05,0.16,50,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-90,1,0,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,50,100);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-135,0,1,0);
+			glTranslatef(0,0,0.15);
+ 			glutSolidCone(0.05,0.16,50,100);
+		glPopMatrix();
+        break;
+
+        case 1:
+		/*Crtanje kocke*/
+		glPushMatrix();
+            glTranslatef(x,0.28,z);
+           	glRotatef(45,0,1,0);
+            glColor3f(0.4,0, 0.4);
+            glutWireCube(0.3);
+            glColor3f(1, 0, 1);
+            glutSolidCube(0.3);
+		glPopMatrix();
+		/*Crtanje bodlji na kocki*/
+		glPushMatrix();
+			glTranslatef(x,0.28,z);
+			glRotatef(-45,0,1,0);
+			glTranslatef(0,0,0.15);
+			glColor3f(0.4,0, 0.4);
+ 			glutSolidCone(0.05,0.16,50,100);
 		glPopMatrix();
 		glPushMatrix();
 			glTranslatef(x,0.28,z);
@@ -125,12 +129,14 @@ void draw_box(float x,float z,int color){
             break;
 
         case 2:
+		/*Crtanje kocke*/
 		glPushMatrix();
             glTranslatef(x,0.28,z);
             glRotatef(45,0,1,0);
             glColor3f(0.2,0.1,1);
+			glColor3f(0,0,0.38039);
             glutWireCube(0.3);
-            glColor3f(0.03,0.02,0.62);
+            glColor3f(0,0,1);
             glutSolidCube(0.3); 
 		glPopMatrix();
 		/*Crtanje bodlji na kocki*/
@@ -138,7 +144,7 @@ void draw_box(float x,float z,int color){
 			glTranslatef(x,0.28,z);
 			glRotatef(-45,0,1,0);
 			glTranslatef(0,0,0.15);
-			glColor3f(0.2,0.1,1);
+			glColor3f(0.074509,0,0.38039);
  			glutSolidCone(0.05,0.16,100,100);
 		glPopMatrix();
 		glPushMatrix();
@@ -160,22 +166,22 @@ void draw_box(float x,float z,int color){
 	glPopMatrix();   
 
 }
-/*Iscrtavanje drugih objekata*/
+/*Iscrtavanje drugih objekata(za sakupljanje bodova)*/
 void draw_objects(float x,float z){
 	glPushMatrix();
+		glLineWidth(1);
     	glTranslatef(x,0.28,z);
 		glTranslatef(-5,0,0);
 		glTranslatef(0,-0.1,0);
+	    glScalef(1,1.25,0.75);
 		glRotatef(rotationObject,0,-1,0);
 		glRotatef(45,1,0,0);
-		glScalef(0.3,1,1);
+		glScalef(0.4,1,1);
         glColor3f(1, 1, 0);
-        glutWireCube(0.15);
-        glColor3f(0.6902,0.5294,0);
-        glutSolidCube(0.15);
-	
+        glutWireCube(0.133);
+        glColor3f(0.788235294,0.788235294,0.0235);
+        glutSolidCube(0.113);	
 	glPopMatrix();
-
 }
 /*Crtanje puta*/
 void draw_path(){
@@ -192,11 +198,8 @@ void draw_ball(){
     glPushMatrix();
         glTranslatef(0,0.15,0);
 		glRotatef(rotationParameter,0,0,-1);
-		
-        if(endAnimation){
-            glColor3f(1,0,0); 
-		}
-		 /*Postavljanje teksture na loptu
+
+		/*Postavljanje teksture na loptu
 		 Deo ispod kopiran je sa githuba od koleginice*/
    		 sphere=gluNewQuadric();
    		 glEnable(GL_TEXTURE_2D);
@@ -208,19 +211,9 @@ void draw_ball(){
 
    		 glDisable(GL_TEXTURE_2D);
    		 glBindTexture(GL_TEXTURE_2D,0);
+		 
     glPopMatrix();
 }
-/*
-void draw_ball(){
-    glPushMatrix();
-        glTranslatef(0,0.15,0);
-        glColor3f(0.9529, 0.011, 0.921);
-		glRotatef(rotationParameter,0,0,-1);
-        if(endAnimation)
-            glColor3f(1,0,0); 
-        glutSolidSphere(shrinkParameter,30,30);
-    glPopMatrix();
-}*/
 /*Prvobitno nebo*/
 void draw_sky(){
     glPushMatrix();
@@ -263,5 +256,37 @@ void draw_scene() {
     	glTranslatef(0,0,-1.4);
     	draw_path();
   	 glPopMatrix(); 
+}
+/*Ispisivanje score-a koji predstavlja trenutni rezultat*/
+void draw_score(){
+
+    char score_str[50];
+	glColor3f(0.788235294,0.788235294,0.0235);
+
+  /*Menjanje projekcije*/
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+   	 glLoadIdentity();
+      gluOrtho2D(0, window_width, 0, window_height);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+      glLoadIdentity();
+
+  /*Ispisivanje scora na ekranu*/
+      glPushMatrix();
+        glRasterPos2f(window_width-1205, window_height-60);
+        sprintf(score_str, "SCORE: %d", score);
+        int length = strlen(score_str);
+        for (int i = 0; i < length; i++) {
+          glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, score_str[i]);
+        }
+      glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+      
+
 }
 

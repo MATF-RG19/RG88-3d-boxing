@@ -18,6 +18,7 @@ void draw_seperation_lines(float len);
 void draw_boxes();
 void draw_ground();
 void draw_objects(float x,float z);
+void draw_score();
 
 
 
