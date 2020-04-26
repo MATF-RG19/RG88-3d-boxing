@@ -1,4 +1,4 @@
-# :small_orange_diamond: 3d-boxing
+# :large_orange_diamond: 3d-boxing
 ---
 
 ### :book: Opis:

@@ -85,7 +85,8 @@ static void inicijalizacijaPozicijaKutija(void);
 #define FILENAME2 "Teksture/endofgame.bmp"
 #define FILENAME3 "Teksture/start.bmp"
 #define FILENAME4 "Teksture/lopta.bmp"
-/*static*/ GLuint textures[5];
+
+GLuint textures[5];
 
 int main(int argc, char **argv){
    
@@ -193,6 +194,7 @@ void on_reshape(int width, int height) {
 void onTimer(int id){
     if(id == TIMER_ID1){
         animationParameter+=1;
+		//uvecavanje skora
 		if(animationParameter%20==0)
 		score+=1;
 		rotationParameter+=6;
@@ -200,8 +202,6 @@ void onTimer(int id){
 
 		if(speed < 0.3)
 			speed += 0.00025;
-
-		//speed = 0.25;
 
         if(shouldJump)
         {
@@ -260,25 +260,25 @@ void onTimer(int id){
 objects[firstObject].obrisi=false;
             }
         }
-/*Ako su ispunjena sva 3 ova uslova za koliziju onda se zavrsava animacija kretanja i krece animacija 
-zavrsetka igre*/
-        
+		/*Ako su ispunjena sva 3 ova uslova za koliziju onda se zavrsava animacija kretanja i krece animacija 
+		zavrsetka igre*/        
         if(boxes[firstBox].x - 0.21 <= 0.08 && boxes[firstBox].x + 0.21 >= -0.08
          && (LeftRightMovement +0.08> boxes[firstBox].z-0.21 && LeftRightMovement -0.08< boxes[firstBox].z+0.21) && ballParameter < 0.46){
+
             animationOngoing = 0;
             endAnimation = 1;
          
         }
 
-        
-	
+        /*Ako su ispunjena sva 3 ova uslova za koliziju onda se "kupi" iliti nestaje objekat i score se 
+		odmah povecava za 10*/	
      	if(objects[firstObject].x<=0.25 && objects[firstObject].x>=0.1
 			&& LeftRightMovement-0.15<objects[firstObject].z && LeftRightMovement+0.15>objects[firstObject].z
 			&& ballParameter < 0.11*1.25){
      		
-            //ako je "pokupljeno" povecavamo score za 1
+            //ako je "pokupljeno" povecavamo score za 20
 			objects[firstObject].obrisi=true;
-			score+=20;
+			score+=10;
 			
 		}
 
@@ -509,8 +509,10 @@ void inicijalizacijaPozicijaKutija(void){
             boxes[i].z = -0.6;
 
         boxes[i].color = rand()%3;
-    }
+    } 
 
+	/*Na isti nacin vrsi se i inicijalizacija pozicija objekata
+	za prikupljanje poena*/
 	  for(int i = 0 , j = 10; i < OBJECT_NUMBER; i++ , j+=10) {
         objects[i].x = j;
 		objects[i].obrisi=false;
