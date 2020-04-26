@@ -24,7 +24,7 @@ static void onTimer(int id);
 static void draw_end_screen();
 static void draw_start_screen();
 
-static float animationParameter = 0;
+static int animationParameter = 0;
 static float animationOngoing = 0;
 float endAnimation = 0;
 //Parametri za lopticu
@@ -59,6 +59,7 @@ struct BOX {
 struct OBJECT {
 float x;
 float z;
+bool obrisi;
 };
 
 /*Pokazivac na prvu kutiju u redu*/
@@ -111,6 +112,7 @@ int main(int argc, char **argv){
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
     glClearColor(0.15, 0.1, 0.19, 0);
+
     glutMainLoop();
   
     return 0;
@@ -190,7 +192,9 @@ void on_reshape(int width, int height) {
 
 void onTimer(int id){
     if(id == TIMER_ID1){
-        animationParameter+=0.2;
+        animationParameter+=1;
+		if(animationParameter%20==0)
+		score+=1;
 		rotationParameter+=6;
 		rotationObject+=3;
 
@@ -244,7 +248,8 @@ void onTimer(int id){
         }
 		 if(objects[firstObject].x <= -5)
         {
-            objects[firstObject].x = objects[lastObject].x+7;
+			objects[firstObject].obrisi=false;
+            objects[firstObject].x = objects[lastObject].x+10;
 			lastObject = firstObject;
             firstObject++;
 			
@@ -252,6 +257,7 @@ void onTimer(int id){
             if(firstObject == OBJECT_NUMBER)
             {
                 firstObject = 0;
+objects[firstObject].obrisi=false;
             }
         }
 /*Ako su ispunjena sva 3 ova uslova za koliziju onda se zavrsava animacija kretanja i krece animacija 
@@ -266,13 +272,14 @@ zavrsetka igre*/
 
         
 	
-     	if(objects[firstObject].x<=0.08 && objects[firstObject].x>=-0.1
+     	if(objects[firstObject].x<=0.25 && objects[firstObject].x>=0.1
 			&& LeftRightMovement-0.15<objects[firstObject].z && LeftRightMovement+0.15>objects[firstObject].z
 			&& ballParameter < 0.11*1.25){
-     		brojac++;
+     		
             //ako je "pokupljeno" povecavamo score za 1
-			score+=1;
-			printf("Uhvatio si:%d\n",brojac);
+			objects[firstObject].obrisi=true;
+			score+=20;
+			
 		}
 
     }else if(id == TIMER_ID2)
@@ -392,20 +399,22 @@ void on_display() {
     for(int i = 0 ; i < BOXES_NUMBER ; i++){
 
         glPushMatrix();
+			glTranslatef(0,-0.05,0);
             draw_box(boxes[i].x,boxes[i].z,boxes[i].color);
         glPopMatrix();
     }
 	/*Iscrtavanje drugih objekata*/
     for(int i = 0 ; i < OBJECT_NUMBER ; i++){
-
+		if(!objects[i].obrisi) {
         glPushMatrix();
             draw_objects(objects[i].x,objects[i].z);
         glPopMatrix();
+	}
     }
-		glDisable(GL_LIGHTING);
-  draw_score();
-glEnable(GL_LIGHTING);
 
+	glDisable(GL_LIGHTING);
+  		draw_score();
+	glEnable(GL_LIGHTING);
 
     glutSwapBuffers();
 
@@ -502,8 +511,10 @@ void inicijalizacijaPozicijaKutija(void){
         boxes[i].color = rand()%3;
     }
 
-	  for(int i = 0 , j = 7; i < OBJECT_NUMBER; i++ , j+=7) {
+	  for(int i = 0 , j = 10; i < OBJECT_NUMBER; i++ , j+=10) {
         objects[i].x = j;
+		objects[i].obrisi=false;
+        
         if(rand()%3 == 0)
             objects[i].z = 0;
         else if(rand()% 3 == 1)

@@ -171,8 +171,7 @@ void draw_objects(float x,float z){
 	glPushMatrix();
 		glLineWidth(1);
     	glTranslatef(x,0.28,z);
-		glTranslatef(-5,0,0);
-		glTranslatef(0,-0.1,0);
+		glTranslatef(0,-0.05,0);
 	    glScalef(1,1.25,0.75);
 		glRotatef(rotationObject,0,-1,0);
 		glRotatef(45,1,0,0);
@@ -276,7 +275,7 @@ void draw_score(){
 
   /*Ispisivanje skora na ekranu*/
       glPushMatrix();
-        glRasterPos2f(window_width-1205, window_height-60);
+        glRasterPos2f(window_width-1270, window_height-60);
         sprintf(score_str, "Score: %d", score);
         int length = strlen(score_str);
         for (int i = 0; i < length; i++) {
