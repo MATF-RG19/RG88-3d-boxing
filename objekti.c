@@ -195,6 +195,7 @@ smanjivanje iste kada dodje do
 sudara sa kockom pomocu shrinkParametra*/
 
 void draw_ball(){
+
     glPushMatrix();
         glTranslatef(0,0.15,0);
 		glRotatef(rotationParameter,0,0,-1);
@@ -273,10 +274,10 @@ void draw_score(){
     glPushMatrix();
       glLoadIdentity();
 
-  /*Ispisivanje scora na ekranu*/
+  /*Ispisivanje skora na ekranu*/
       glPushMatrix();
         glRasterPos2f(window_width-1205, window_height-60);
-        sprintf(score_str, "SCORE: %d", score);
+        sprintf(score_str, "Score: %d", score);
         int length = strlen(score_str);
         for (int i = 0; i < length; i++) {
           glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, score_str[i]);

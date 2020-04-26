@@ -9,7 +9,7 @@
 #include "objekti.h"
 #include "image.h"
 
-#define TIMER_INTERVAL 20
+#define TIMER_INTERVAL 10
 #define TIMER_ID1 0
 #define TIMER_ID2 1
 
@@ -36,7 +36,7 @@ static bool canJump = true;
 static bool goRight = false;
 static bool goLeft = false;
 //brzina kretanja
-static float speed= 0.1;
+static float speed= 0.06;
 //rotacijski parametar za lopticu 
 int rotationParameter = 0;
 //rotacija zutih objekata
@@ -47,6 +47,7 @@ float shrinkParameter = 0.08;
 int window_width, window_height;
 
 int score = 0;
+int brojac=0;
 
 /*Struktura koja ce predstavljati svaku kutiju*/
 struct BOX {
@@ -94,7 +95,7 @@ int main(int argc, char **argv){
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     
-  //  glutFullScreen();
+    glutFullScreen();
   
     inicijalizacijaPozicijaKutija();
     inicijalizacijaTekstura();
@@ -128,7 +129,7 @@ void on_keyboard(unsigned char key, int x, int y) {
 		  firstObject = 0;
 		  lastBox = 9;
 		  lastObject = 9;
-		  speed = 0.1;
+		  speed = 0.06;
 		  rotationParameter=0;
 		  rotationObject=0;
           shrinkParameter = 0.08;
@@ -193,9 +194,10 @@ void onTimer(int id){
 		rotationParameter+=6;
 		rotationObject+=3;
 
-		if(speed<1){
-			speed+=0.0005;
-		}
+		if(speed < 0.3)
+			speed += 0.00025;
+
+		//speed = 0.25;
 
         if(shouldJump)
         {
@@ -203,9 +205,9 @@ void onTimer(int id){
                 shouldGoUp=false;
             
             if(shouldGoUp)
-                ballParameter+=0.02;
+                ballParameter+=0.013;
             else
-                ballParameter-=0.02;
+                ballParameter-=0.013;
 
             if(ballParameter<=0)
                 shouldJump=false;
@@ -214,12 +216,12 @@ void onTimer(int id){
 
         if(LeftRightMovement >= -0.6 && goLeft)
         {
-            LeftRightMovement-=0.02;
+            LeftRightMovement-=0.013;
         }
 
         if(LeftRightMovement <= 0.6 && goRight)
         {
-            LeftRightMovement+=0.02;
+            LeftRightMovement+=0.013;
         }
    
         for(int i = 0 ; i < BOXES_NUMBER ; i++)
@@ -230,7 +232,7 @@ void onTimer(int id){
 
         if(boxes[firstBox].x <= -5)
         {
-            boxes[firstBox].x = boxes[lastBox].x+9;
+            boxes[firstBox].x = boxes[lastBox].x+7;
 			lastBox = firstBox;
             firstBox++;
 			
@@ -242,7 +244,7 @@ void onTimer(int id){
         }
 		 if(objects[firstObject].x <= -5)
         {
-            objects[firstObject].x = objects[lastObject].x+9;
+            objects[firstObject].x = objects[lastObject].x+7;
 			lastObject = firstObject;
             firstObject++;
 			
@@ -261,12 +263,17 @@ zavrsetka igre*/
             endAnimation = 1;
          
         }
-	/*
-     	if(objects[firstObject].x<=0.08 && objects[firstObject].x>=-0.09
-			&& LeftRightMovement+0.08>objects[firstObject].z-0.11*0.75/2 && LeftRightMovement-0.08>objects[firstObject].z+0.11*0.75/2
+
+        
+	
+     	if(objects[firstObject].x<=0.08 && objects[firstObject].x>=-0.1
+			&& LeftRightMovement-0.15<objects[firstObject].z && LeftRightMovement+0.15>objects[firstObject].z
 			&& ballParameter < 0.11*1.25){
-			printf("jej\n");
-		}*/
+     		brojac++;
+            //ako je "pokupljeno" povecavamo score za 1
+			score+=1;
+			printf("Uhvatio si:%d\n",brojac);
+		}
 
     }else if(id == TIMER_ID2)
     {
@@ -483,7 +490,7 @@ void inicijalizacijaPozicijaKutija(void){
     kako bi pri svakom novom pokretanju raspored kutija bio drugaciji*/
     srand(time(NULL));
 
-    for(int i = 0 , j = 9; i < BOXES_NUMBER; i++ , j+=9) {
+    for(int i = 0 , j = 7; i < BOXES_NUMBER; i++ , j+=7) {
         boxes[i].x = j;
         if(rand()%3 == 0)
             boxes[i].z = 0;
@@ -495,7 +502,7 @@ void inicijalizacijaPozicijaKutija(void){
         boxes[i].color = rand()%3;
     }
 
-	  for(int i = 0 , j = 9; i < OBJECT_NUMBER; i++ , j+=9) {
+	  for(int i = 0 , j = 7; i < OBJECT_NUMBER; i++ , j+=7) {
         objects[i].x = j;
         if(rand()%3 == 0)
             objects[i].z = 0;
@@ -590,5 +597,6 @@ static void draw_start_screen(){
     glutSwapBuffers();
 
 }
+
 
 
