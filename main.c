@@ -128,6 +128,7 @@ void on_keyboard(unsigned char key, int x, int y) {
           ballParameter=0;
           shouldGoUp = true;
           shouldJump = false;
+		  canJump=true;
           firstBox = 0;
 		  firstObject = 0;
 		  lastBox = 9;
@@ -160,6 +161,8 @@ void on_keyboard(unsigned char key, int x, int y) {
             {
                 shouldJump=true;
                 shouldGoUp=true;
+				canJump=false;
+
             }
             break; 
         case 'a':
@@ -205,18 +208,24 @@ void onTimer(int id){
 
         if(shouldJump)
         {
-            if(ballParameter>=0.72)
+			
+            if(ballParameter>=0.72){
                 shouldGoUp=false;
+			}
             
             if(shouldGoUp)
                 ballParameter+=0.013;
             else
                 ballParameter-=0.013;
 
-            if(ballParameter<=0)
+            if(ballParameter<=0){
                 shouldJump=false;
+				canJump=true;
+			
+}
 
         }
+		
 
         if(LeftRightMovement >= -0.6 && goLeft)
         {
