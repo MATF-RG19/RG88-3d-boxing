@@ -214,9 +214,9 @@ void onTimer(int id){
 			}
             
             if(shouldGoUp)
-                ballParameter+=0.013;
+                ballParameter+=0.0125;
             else
-                ballParameter-=0.013;
+                ballParameter-=0.019;
 
             if(ballParameter<=0){
                 shouldJump=false;
